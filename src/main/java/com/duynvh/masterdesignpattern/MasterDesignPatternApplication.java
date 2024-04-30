@@ -3,6 +3,9 @@ package com.duynvh.masterdesignpattern;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.duynvh.masterdesignpattern.builder.AuthorBuilder;
+import com.duynvh.masterdesignpattern.builder.BookBuilder;
+import com.duynvh.masterdesignpattern.builder.CategoryBuilder;
 import com.duynvh.masterdesignpattern.entity.Author;
 import com.duynvh.masterdesignpattern.entity.Book;
 import com.duynvh.masterdesignpattern.entity.Category;
@@ -31,15 +34,24 @@ public class MasterDesignPatternApplication {
 				Book.class
 		);
 
-		final Author author = entityFactory.newEntity(Author.class, "Dzung");
+		final Author author = entityFactory
+				.newEntityBuilder(AuthorBuilder.class)
+				.name("Duy")
+				.build();
 		authorRepository.save(author);
 
-		final Category category = entityFactory.newEntity(Category.class, "Technology");
+		final Category category = entityFactory
+				.newEntityBuilder(CategoryBuilder.class)
+				.name("Coding")
+				.build();
 		categoryRepository.save(category);
 
-		final Book book = entityFactory.newEntity(Book.class, "Design Patterns");
-		book.setAuthorId(author.getId());
-		book.setCategoryId(category.getId());
+		final Book book = entityFactory
+				.newEntityBuilder(BookBuilder.class)
+				.name("Design Patterns 2")
+				.authorId(author.getId())
+				.categoryId(category.getId())
+				.build();
 		bookRepository.save(book);
 	}
 

@@ -1,5 +1,6 @@
 package com.duynvh.masterdesignpattern.factory.impl;
 
+import com.duynvh.masterdesignpattern.builder.AuthorBuilder;
 import com.duynvh.masterdesignpattern.entity.Author;
 import com.duynvh.masterdesignpattern.factory.AuthorFactory;
 
@@ -9,5 +10,10 @@ public class AuthorFactoryImpl implements AuthorFactory {
 		final Author author = new Author();
 		author.setName(name);
 		return author;
+	}
+
+	@Override
+	public AuthorBuilder newAuthorBuilder() {
+		return new AuthorBuilder();
 	}
 }

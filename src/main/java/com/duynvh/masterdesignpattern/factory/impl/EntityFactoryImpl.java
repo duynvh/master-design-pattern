@@ -1,5 +1,9 @@
 package com.duynvh.masterdesignpattern.factory.impl;
 
+import com.duynvh.masterdesignpattern.builder.AuthorBuilder;
+import com.duynvh.masterdesignpattern.builder.BookBuilder;
+import com.duynvh.masterdesignpattern.builder.Builder;
+import com.duynvh.masterdesignpattern.builder.CategoryBuilder;
 import com.duynvh.masterdesignpattern.entity.Author;
 import com.duynvh.masterdesignpattern.entity.Book;
 import com.duynvh.masterdesignpattern.entity.Category;
@@ -29,5 +33,19 @@ public class EntityFactoryImpl implements EntityFactory {
 		}
 
 		throw new IllegalArgumentException("there is no factory for: " + entityType);
+	}
+
+	@Override
+	public <E, B extends Builder<E>> B newEntityBuilder(final Class<B> builderType) {
+		if (builderType == AuthorBuilder.class) {
+			return (B) authorFactory.newAuthorBuilder();
+		}
+		if (builderType == CategoryBuilder.class) {
+			return (B) categoryFactory.newCategoryBuilder();
+		}
+		if (builderType == BookBuilder.class) {
+			return (B) bookFactory.newBookBuilder();
+		}
+		throw new IllegalArgumentException("there is no factory for: " + builderType);
 	}
 }
