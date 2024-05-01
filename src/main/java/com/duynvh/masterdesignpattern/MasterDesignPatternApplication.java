@@ -53,6 +53,10 @@ public class MasterDesignPatternApplication {
 				.categoryId(category.getId())
 				.build();
 		bookRepository.save(book);
+
+		final Book otherBook = book.clone();
+		otherBook.setName("Master Java");
+		bookRepository.save(otherBook);
 	}
 
 }
