@@ -8,15 +8,16 @@ import java.sql.Statement;
 import com.duynvh.masterdesignpattern.BookApplication;
 import com.duynvh.masterdesignpattern.entity.Author;
 import com.duynvh.masterdesignpattern.factory.ConnectionFactory;
+import com.duynvh.masterdesignpattern.pool.ConnectionPool;
 import com.duynvh.masterdesignpattern.repository.AuthorRepository;
 
 public class AuthorRepositoryImpl implements AuthorRepository {
-	private final ConnectionFactory connectionFactory = BookApplication.getInstance().getConnectionFactory();
-
 	@Override
 	public void save(final Author author) throws Exception {
 		final String query = "INSERT INTO Author (name) VALUES  (?)";
-		try (Connection connection = connectionFactory.newConnection()) {
+		final ConnectionPool connectionPool = BookApplication.getInstance().getConnectionPool();
+		final Connection connection = connectionPool.provide();
+		try {
 			try(
 					PreparedStatement statement = connection.prepareStatement(
 							query,
@@ -31,6 +32,8 @@ public class AuthorRepositoryImpl implements AuthorRepository {
 					}
 				}
 			}
+		} finally {
+			connectionPool.pushBack(connection);
 		}
 	}
 }

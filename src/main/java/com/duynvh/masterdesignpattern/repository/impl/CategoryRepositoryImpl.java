@@ -8,6 +8,7 @@ import java.sql.Statement;
 import com.duynvh.masterdesignpattern.BookApplication;
 import com.duynvh.masterdesignpattern.entity.Category;
 import com.duynvh.masterdesignpattern.factory.ConnectionFactory;
+import com.duynvh.masterdesignpattern.pool.ConnectionPool;
 import com.duynvh.masterdesignpattern.repository.CategoryRepository;
 
 public class CategoryRepositoryImpl implements CategoryRepository {
@@ -17,7 +18,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 	@Override
 	public void save(Category author) throws Exception {
 		final String query = "INSERT INTO Category (name) VALUE(?)";
-		try (Connection connection = connectionFactory.newConnection()) {
+		final ConnectionPool connectionPool = BookApplication
+				.getInstance()
+				.getConnectionPool();
+		final Connection connection = connectionPool.provide();
+		try {
 			try(
 					PreparedStatement statement = connection.prepareStatement(
 							query,
@@ -32,6 +37,8 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 					}
 				}
 			}
+		} finally {
+			connectionPool.pushBack(connection);
 		}
 	}
 }
